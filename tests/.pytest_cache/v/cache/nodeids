@@ -1,0 +1,18 @@
+[
+  "test_number_one.py::test_checkboxes",
+  "test_number_one.py::test_color_picker",
+  "test_number_one.py::test_date_picker_format",
+  "test_number_one.py::test_disabled_input",
+  "test_number_one.py::test_dropdown_datalist",
+  "test_number_one.py::test_dropdown_select",
+  "test_number_one.py::test_file_input",
+  "test_number_one.py::test_floating_elements",
+  "test_number_one.py::test_future_date",
+  "test_number_one.py::test_manual_date_picker_date",
+  "test_number_one.py::test_password_field",
+  "test_number_one.py::test_past_date",
+  "test_number_one.py::test_prueba_uno",
+  "test_number_one.py::test_readonly_input",
+  "test_number_one.py::test_submit_button",
+  "test_number_one.py::test_textarea"
+]
