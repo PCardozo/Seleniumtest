@@ -1,5 +1,4 @@
 {
-  "test_number_one.py::test_dropdown_select": true,
   "test_number_one.py::test_dropdown_datalist": true,
   "test_number_one.py::test_file_input": true,
   "test_number_one.py::test_checkboxes": true,
