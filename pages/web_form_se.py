@@ -2,6 +2,7 @@
 #Importing methods from selenium tools to lcoate stuff and to stroke keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.select import Select
 
 #cREATING THE pAGE oBJECT cLASS
 class WebFormPage():
@@ -26,6 +27,34 @@ class WebFormPage():
         self.textarea_input = self.browser.find_element(By.NAME, "my-textarea")
         self.disabled_input = self.browser.find_element(By.NAME, "my-disabled")
         self.readonly_text_field = self.browser.find_element(By.NAME, "my-readonly")
+        self.dropdown_select = self.browser.find_element(By.NAME, "my-select")
+        self.dropdown_select_option = self.browser.find_element(By.CSS_SELECTOR, "[value='1']")
+        self.dropdown_datalist = self.browser.find_element(By.NAME, "my-datalist")
+        self.dropdown_datalist_option = self.browser.find_element(By.CSS_SELECTOR, "[value='San Francisco']")
+
+    def dropdown_datalist_current_value(self):
+        return self.dropdown_select.get_attribute('value')
+
+    def click_dropdown_datalist_option(self):
+        self.dropdown_datalist_option.click()
+
+    def click_dropdown_datalist(self):
+        self.dropdown_datalist.click()
+
+    def send_keys_dropdown_datalist(self,text_to_send):
+        self.dropdown_datalist.send_keys(text_to_send)
+
+    def dropdown_select_current_value(self):
+        return self.dropdown_select.get_attribute('value')
+
+    def click_dropdown_select_option(self):
+        self.dropdown_select_option.click()
+
+    def dropdown_select_option_value(self):
+        return self.dropdown_select_option.get_attribute('value')
+
+    def click_dropdown_select(self):
+        self.dropdown_select.click()
 
     def click_text_input(self):
         self.text_input.click()
