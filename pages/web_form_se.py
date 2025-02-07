@@ -1,5 +1,7 @@
 
 #Importing methods from selenium tools to lcoate stuff and to stroke keys
+import os
+import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
@@ -26,6 +28,25 @@ class WebFormPage():
         self.textarea_input = self.browser.find_element(By.NAME, "my-textarea")
         self.disabled_input = self.browser.find_element(By.NAME, "my-disabled")
         self.readonly_text_field = self.browser.find_element(By.NAME, "my-readonly")
+        self.file_input = self.browser.find_element(By.NAME,"my-file")
+
+    def send_keys_to_file_input(self,text_to_send):
+        self.file_input.send_keys(text_to_send)
+
+    def file_input_value(self):
+        value = self.file_input.get_attribute('value')
+        print(value)
+        return value
+
+    def click_file_input(self):
+        self.file_input.click()
+        #time.sleep(3)
+
+    def select_file_to_upload(self,local_file_path):
+        keyboard = Controller()
+        keyboard.type(local_file_path)
+        keyboard.press(Key.enter)
+        keyboard.release(Key.enter)
 
     def click_text_input(self):
         self.text_input.click()

@@ -11,10 +11,11 @@
   # to bring the arguments here, im not quite sure.
 
 
-
-
+import os
 from pages.web_form_se import WebFormPage
 from pages.form_submitted import Form_submitted_page
+from tests.conftest import browser
+
 
   # Escenario 1: Validar el campo de texto
 
@@ -143,7 +144,23 @@ def test_dropdown_datalist(browser):
   raise Exception("Incomplete Test")
 
 def test_file_input(browser):
-  raise Exception("Incomplete Test")
+  # Given el usuario está en la página del formulario.
+  #Arrange
+  web_form_under_test = WebFormPage(browser)
+  #path_to_file = "C:\\Users\\Usuario\\selenium-test-4\\env\\tests\\testFileName.png"
+  file_name = "testFileName.png"
+  file = os.path.join(os.getcwd(), file_name)
+  web_form_under_test.load()
+
+  #ACT
+  # When el usuario carga un archivo a través del campo de entrada de archivo.
+  web_form_under_test.send_keys_to_file_input(file)
+  web_form_under_test.click_file_input()
+  #web_form_under_test.select_file_to_upload(path_to_file) #Here you should type the path in your system pointing to the test file in the tests folder
+  #value.split(sep="\\")
+  data = web_form_under_test.file_input_value()
+  # Then el nombre del archivo debe mostrarse correctamente en el campo de entrada.
+  assert file_name in data
 
 def test_checkboxes(browser):
   raise Exception("Incomplete Test")
