@@ -177,6 +177,7 @@ def test_checkboxes(browser):
 
 def test_color_picker(browser):
   # Given el usuario está en la página del formulario.
+  web_form_under_test = WebFormPage(browser)
   # When el usuario ingresa los valores RGB para un color en el selector de color.
   # Then el color seleccionado debe reflejarse correctamente en el campo.
 
