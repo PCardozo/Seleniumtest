@@ -30,6 +30,17 @@ class WebFormPage():
         self.readonly_text_field = self.browser.find_element(By.NAME, "my-readonly")
         self.file_input = self.browser.find_element(By.NAME,"my-file")
         self.default_checkbox = self.browser.find_element(By.ID,"my-check-2")
+        self.default_radiobutton = self.browser.find_element(By.ID, "my-radio-1")
+        self.checked_radiobutton = self.browser.find_element(By.ID, "my-radio-2")
+
+    def default_radiobutton_value(self):
+        return self.default_radiobutton.get_attribute("checked")
+
+    def checked_radiobutton_value(self):
+        return self.checked_radiobutton.get_attribute("checked")
+
+    def click_default_radiobutton(self):
+        self.default_radiobutton.click()
 
     def click_default_checkbox(self):
         self.default_checkbox.click()

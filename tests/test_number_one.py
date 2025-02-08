@@ -12,6 +12,8 @@
 
 
 import os
+from email.policy import default
+
 from pages.web_form_se import WebFormPage
 from pages.form_submitted import Form_submitted_page
 from tests.conftest import browser
@@ -175,6 +177,19 @@ def test_checkboxes(browser):
   # Then el estado del checkbox debe cambiar a "checked".
   assert web_form_under_test.default_checkbox_value()
 
+def test_radiobuttons(browser):
+  #ARRANGE
+  #Given el usuario está en la página del formulario.
+  web_form_under_test = WebFormPage(browser)
+  web_form_under_test.load()
+  #ACT
+  #When el usuario selecciona un radio button por defecto.
+  web_form_under_test.click_default_radiobutton()
+  #ASSERT
+  #Then el estado del radio button debe cambiar a "checked"
+  assert web_form_under_test.default_radiobutton_value()
+  #And los otros radio buttons deben quedar en estado "unchecked".
+  assert web_form_under_test.checked_radiobutton_value() == None
 def test_color_picker(browser):
   raise Exception("Incomplete Test")
 
