@@ -176,7 +176,9 @@ def test_checkboxes(browser):
   assert web_form_under_test.default_checkbox_value()
 
 def test_color_picker(browser):
-  raise Exception("Incomplete Test")
+  # Given el usuario está en la página del formulario.
+  # When el usuario ingresa los valores RGB para un color en el selector de color.
+  # Then el color seleccionado debe reflejarse correctamente en el campo.
 
 def test_date_picker_format(browser):
   raise Exception("Incomplete Test")
