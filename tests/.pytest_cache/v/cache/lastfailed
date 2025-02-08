@@ -1,6 +1,5 @@
 {
   "test_number_one.py::test_dropdown_datalist": true,
-  "test_number_one.py::test_file_input": true,
   "test_number_one.py::test_checkboxes": true,
   "test_number_one.py::test_color_picker": true,
   "test_number_one.py::test_date_picker_format": true,

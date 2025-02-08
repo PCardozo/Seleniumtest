@@ -155,7 +155,7 @@ def test_file_input(browser):
   #ACT
   # When el usuario carga un archivo a través del campo de entrada de archivo.
   web_form_under_test.send_keys_to_file_input(file)
-  web_form_under_test.click_file_input()
+  #web_form_under_test.click_file_input()
   #web_form_under_test.select_file_to_upload(path_to_file) #Here you should type the path in your system pointing to the test file in the tests folder
   #value.split(sep="\\")
   data = web_form_under_test.file_input_value()
