@@ -163,7 +163,17 @@ def test_file_input(browser):
   assert file_name in data
 
 def test_checkboxes(browser):
-  raise Exception("Incomplete Test")
+  # ARRANGE
+  web_form_under_test = WebFormPage(browser)
+
+  #ACT
+  # Given el usuario está en la página del formulario.
+  web_form_under_test.load()
+  # When el usuario selecciona el checkbox por defecto.
+  web_form_under_test.click_default_checkbox()
+  #ASSERT
+  # Then el estado del checkbox debe cambiar a "checked".
+  assert web_form_under_test.default_checkbox_value()
 
 def test_color_picker(browser):
   raise Exception("Incomplete Test")

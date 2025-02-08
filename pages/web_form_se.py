@@ -29,6 +29,13 @@ class WebFormPage():
         self.disabled_input = self.browser.find_element(By.NAME, "my-disabled")
         self.readonly_text_field = self.browser.find_element(By.NAME, "my-readonly")
         self.file_input = self.browser.find_element(By.NAME,"my-file")
+        self.default_checkbox = self.browser.find_element(By.ID,"my-check-2")
+
+    def click_default_checkbox(self):
+        self.default_checkbox.click()
+
+    def default_checkbox_value(self):
+        return self.default_checkbox.get_attribute("checked")
 
     def send_keys_to_file_input(self,text_to_send):
         self.file_input.send_keys(text_to_send)
