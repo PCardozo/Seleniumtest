@@ -13,7 +13,7 @@
 
 import os
 from email.policy import default
-
+from datetime import date
 from pages.web_form_se import WebFormPage
 from pages.form_submitted import Form_submitted_page
 from tests.conftest import browser
@@ -194,7 +194,18 @@ def test_color_picker(browser):
   raise Exception("Incomplete Test")
 
 def test_date_picker_format(browser):
-  raise Exception("Incomplete Test")
+  # Given el usuario está en la página del formulario.
+  my_date = date.today().strftime("%m/%d/%Y") #Fecha formateada en americano
+  day_value = my_date.split('/')[1]
+  if(day_value[0]=="0"):
+    day_value=day_value[1]
+  web_form_under_test = WebFormPage(browser)
+  web_form_under_test.load()
+  # When el usuario selecciona una fecha válida en el selector de fecha.
+  web_form_under_test.date_picker.click()
+  web_form_under_test.click_date_day_element(day_value)
+  # Then la fecha seleccionada debe reflejarse correctamente en el campo.
+  assert web_form_under_test.date_picker_value() == my_date
 
 def test_past_date(browser):
   raise Exception("Incomplete Test")

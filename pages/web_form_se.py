@@ -32,6 +32,22 @@ class WebFormPage():
         self.default_checkbox = self.browser.find_element(By.ID,"my-check-2")
         self.default_radiobutton = self.browser.find_element(By.ID, "my-radio-1")
         self.checked_radiobutton = self.browser.find_element(By.ID, "my-radio-2")
+        self.date_picker = self.browser.find_element(By.NAME, "my-date")
+
+    def date_picker_value(self):
+        return self.date_picker.get_attribute("value")
+
+    def click_date_day_element(self,day):
+        day_elements = self.browser.find_elements(By.CSS_SELECTOR, ".day:not(.old)")
+        if (len(day_elements)<1):
+            raise Exception("Jajaj no encontré ná") #Failsafe
+        for e in day_elements:
+            if(e.get_attribute("textContent")==day):
+                e.click()
+                break
+
+    def click_date_picker(self):
+        self.date_picker.click()
 
     def default_radiobutton_value(self):
         return self.default_radiobutton.get_attribute("checked")
@@ -53,12 +69,10 @@ class WebFormPage():
 
     def file_input_value(self):
         value = self.file_input.get_attribute('value')
-        print(value)
         return value
 
     def click_file_input(self):
         self.file_input.click()
-        #time.sleep(3)
 
     def select_file_to_upload(self,local_file_path):
         keyboard = Controller()
