@@ -1,7 +1,6 @@
 {
   "test_number_one.py::test_dropdown_datalist": true,
   "test_number_one.py::test_color_picker": true,
-  "test_number_one.py::test_past_date": true,
   "test_number_one.py::test_manual_date_picker_date": true,
   "test_number_one.py::test_future_date": true,
   "test_number_one.py::test_floating_elements": true,

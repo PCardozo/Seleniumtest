@@ -17,7 +17,7 @@ from datetime import date
 from pages.web_form_se import WebFormPage
 from pages.form_submitted import Form_submitted_page
 from tests.conftest import browser
-
+from dateutil.relativedelta import relativedelta
 
   # Escenario 1: Validar el campo de texto
 
@@ -208,7 +208,17 @@ def test_date_picker_format(browser):
   assert web_form_under_test.date_picker_value() == my_date
 
 def test_past_date(browser):
-  raise Exception("Incomplete Test")
+  # Given el usuario está en la página del formulario.
+  #my_date = date.today().strftime("%m/%d/%Y") # Consigo fecha de hoy en Formato Americano
+  my_date = date.today()
+  calculate_date = my_date - relativedelta(years=2, months=2, days=2)
+  target_date = calculate_date.strftime("%m/%d/%Y")
+
+  #web_form_under_test = WebFormPage(browser)
+  #web_form_under_test.load()
+
+  # When el usuario selecciona una fecha igual a la fecha actual pero dos años, dos meses y dos días atrás
+  # Then la fecha seleccionada debe reflejarse correctamente en el campo.
 
 def test_manual_date_picker_date(browser):
   raise Exception("Incomplete Test")
