@@ -139,8 +139,8 @@ def test_dropdown_select(browser):
   # When el usuario selecciona una opción del dropdown (select).
   web_form_under_test.click_dropdown_select()
   web_form_under_test.click_dropdown_select_option()
-  # Then la opción seleccionada debe reflejarse correctamente en el campo.
-  # ASSERT
+  #Then la opción seleccionada debe reflejarse correctamente en el campo.
+  #ASSERT
   assert web_form_under_test.dropdown_select_current_value() == web_form_under_test.dropdown_select_option_value()
 
 def test_dropdown_datalist(browser):
