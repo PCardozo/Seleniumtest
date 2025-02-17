@@ -17,7 +17,6 @@ class WebFormPage():
     #Initialization
     def __init__(self,browser):
         self.browser = browser
-
     def load(self):
         self.browser.get(self.URL)
 
@@ -33,6 +32,19 @@ class WebFormPage():
         self.default_radiobutton = self.browser.find_element(By.ID, "my-radio-1")
         self.checked_radiobutton = self.browser.find_element(By.ID, "my-radio-2")
         self.date_picker = self.browser.find_element(By.NAME, "my-date")
+
+    def  date_picker_switch_deploy_and_click(self): #this function clicks the switchers to get the list of years
+        self.switches_array = self.browser.find_elements(By.CLASS_NAME, "datepicker-switch")
+        self.switches_array[0].click()
+        self.switches_array[1].click()
+
+    def date_picker_switch_click_years(self,target_year):
+        self.year_elements = self.browser.find_elements(By.CLASS_NAME, "year")
+        for e in self.year_elements:
+            if(e.get_attribute("textContent")==target_year):
+                e.click()
+                break
+
 
     def date_picker_value(self):
         return self.date_picker.get_attribute("value")
