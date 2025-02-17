@@ -40,10 +40,22 @@ class WebFormPage():
 
     def date_picker_switch_click_years(self,target_year):
         self.year_elements = self.browser.find_elements(By.CLASS_NAME, "year")
+        if (len(self.year_elements)<1):
+            raise Exception("Jajaj no encontré ná") #Failsafe
         for e in self.year_elements:
-            if(e.get_attribute("textContent")==target_year):
+            if(e.get_attribute('textContent')==target_year):
                 e.click()
                 break
+
+    def date_picker_switch_find_and_click_month(self,month_init):
+        self.month_elements = self.browser.find_elements(By.CLASS_NAME, "month")
+        if (len(self.month_elements) < 1):
+            raise Exception("Jajaj no encontré ná")  # Failsafe
+        for e in self.month_elements:
+            if (e.get_attribute('textContent') == month_init):
+                e.click()
+                break
+
 
 
     def date_picker_value(self):
@@ -51,10 +63,13 @@ class WebFormPage():
 
     def click_date_day_element(self,day):
         day_elements = self.browser.find_elements(By.CSS_SELECTOR, ".day:not(.old)")
+        day_text = day
+        if (day_text[0] == "0"):
+            day_text = day_text[1]
         if (len(day_elements)<1):
             raise Exception("Jajaj no encontré ná") #Failsafe
         for e in day_elements:
-            if(e.get_attribute("textContent")==day):
+            if(e.get_attribute("textContent")==day_text):
                 e.click()
                 break
 

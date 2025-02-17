@@ -198,8 +198,6 @@ def test_date_picker_format(browser):
   # Given el usuario está en la página del formulario.
   my_date = date.today().strftime("%m/%d/%Y") #Fecha formateada en americano
   day_value = my_date.split('/')[1]
-  if(day_value[0]=="0"):
-    day_value=day_value[1]
   web_form_under_test = WebFormPage(browser)
   web_form_under_test.load()
   # When el usuario selecciona una fecha válida en el selector de fecha.
@@ -215,16 +213,18 @@ def test_past_date(browser):
   calculate_date = my_date - relativedelta(years=2, months=2, days=2)
   target_date = calculate_date.strftime("%m/%d/%Y")
   target_year = target_date.split("/")[2]
-
+  target_day = target_date.split("/")[1]
+  # When el usuario selecciona una fecha igual a la fecha actual pero dos años, dos meses y dos días atrás
   web_form_under_test = WebFormPage(browser)
   web_form_under_test.load()
   web_form_under_test.click_date_picker()
   web_form_under_test.date_picker_switch_deploy_and_click()
-  time.sleep(3)
-  #web_form_under_test.click_date_picker_switch()
-  #print(web_form_under_test.date_picker_switch.get_attribute("textContent"))
-  # When el usuario selecciona una fecha igual a la fecha actual pero dos años, dos meses y dos días atrás
+  web_form_under_test.date_picker_switch_click_years(target_year)
+  web_form_under_test.date_picker_switch_find_and_click_month(calculate_date.strftime("%B")[0:3])
+  web_form_under_test.click_date_day_element(target_day)
+  time.sleep(2)
   # Then la fecha seleccionada debe reflejarse correctamente en el campo.
+  assert web_form_under_test.date_picker_value() == target_date
 
 def test_manual_date_picker_date(browser):
   raise Exception("Incomplete Test")
