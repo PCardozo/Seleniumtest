@@ -61,6 +61,9 @@ class WebFormPage():
     def date_picker_value(self):
         return self.date_picker.get_attribute("value")
 
+    def send_keys_to_date_picker(self,text_to_send):
+        self.date_picker.send_keys(text_to_send)
+
     def click_date_day_element(self,day):
         day_elements = self.browser.find_elements(By.CSS_SELECTOR, ".day:not(.old)")
         day_text = day

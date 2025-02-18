@@ -117,9 +117,7 @@ def test_disabled_input(browser):
   assert web_form_under_test.disabled_input_value()
 
 def test_readonly_input(browser):
-  # ARRANGE
   web_form_under_test = WebFormPage(browser)
-
   # Given el usuario está en la página del formulario.
   web_form_under_test.load()
 
@@ -208,6 +206,7 @@ def test_date_picker_format(browser):
 
 def test_past_date(browser):
   # Given el usuario está en la página del formulario.
+
   #my_date = date.today().strftime("%m/%d/%Y") # Consigo fecha de hoy en Formato Americano
   my_date = date.today()
   calculate_date = my_date - relativedelta(years=2, months=2, days=2)
@@ -227,7 +226,15 @@ def test_past_date(browser):
   assert web_form_under_test.date_picker_value() == target_date
 
 def test_manual_date_picker_date(browser):
-  raise Exception("Incomplete Test")
+  # Given el usuario está en la página del formulario.
+  web_form_under_test = WebFormPage(browser)
+  web_form_under_test.load()
+  # When el usuario ingresa directamente una fecha válida en el selector de fecha.
+  web_form_under_test.click_date_picker()
+  target_date = date.today().strftime("%m/%d/%Y")
+  web_form_under_test.send_keys_to_date_picker(target_date)
+  # Then la fecha seleccionada debe reflejarse correctamente en el campo.
+  assert web_form_under_test.date_picker_value() == target_date
 
 def test_future_date(browser):
   raise Exception("Incomplete Test")
