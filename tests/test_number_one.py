@@ -13,7 +13,7 @@
 
 import os
 import time
-from email.policy import default
+#from email.policy import default
 from datetime import date
 from pages.web_form_se import WebFormPage
 from pages.form_submitted import Form_submitted_page
