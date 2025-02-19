@@ -237,7 +237,22 @@ def test_manual_date_picker_date(browser):
   assert web_form_under_test.date_picker_value() == target_date
 
 def test_future_date(browser):
-  raise Exception("Incomplete Test")
+  # Given the user is viewing the form page
+  my_date = date.today()
+  calculate_date = my_date + relativedelta(years=1, months=1, days=1)
+  target_date = calculate_date.strftime("%m/%d/%Y")
+  target_year = target_date.split("/")[2]
+  target_day = target_date.split("/")[1]
+  web_form_under_test = WebFormPage(browser)
+  web_form_under_test.load()
+  # When the user selects a date in the the future
+  web_form_under_test.click_date_picker()
+  web_form_under_test.date_picker_switch_deploy_and_click()
+  web_form_under_test.date_picker_switch_click_years(target_year)
+  web_form_under_test.date_picker_switch_find_and_click_month(calculate_date.strftime("%B")[0:3])
+  web_form_under_test.click_date_day_element(target_day)
+  # Then the selected date must be correctly displayed in its corresponding field.
+  assert web_form_under_test.date_picker_value() == target_date
 
 def test_floating_elements(browser):
   raise Exception("Incomplete Test")
