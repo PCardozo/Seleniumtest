@@ -237,13 +237,13 @@ def test_manual_date_picker_date(browser):
   assert web_form_under_test.date_picker_value() == target_date
 
 def test_future_date(browser):
-  # Given the user is viewing the form page
   my_date = date.today()
   calculate_date = my_date + relativedelta(years=1, months=1, days=1)
   target_date = calculate_date.strftime("%m/%d/%Y")
   target_year = target_date.split("/")[2]
   target_day = target_date.split("/")[1]
   web_form_under_test = WebFormPage(browser)
+  # Given the user is viewing the form page
   web_form_under_test.load()
   # When the user selects a date in the the future
   web_form_under_test.click_date_picker()
@@ -255,7 +255,46 @@ def test_future_date(browser):
   assert web_form_under_test.date_picker_value() == target_date
 
 def test_floating_elements(browser):
-  raise Exception("Incomplete Test")
+  #Given el usuario está en la página del formulario.
+  web_form_under_test = WebFormPage(browser)
+  web_form_under_test.load()
+  #When el usuario hace click en el Color Picker
+  web_form_under_test.click_color_picker
+  #And el usuario hace clic fuera del Color Picker o presiona el botón “Esc”
+  web_form_under_test.click_title_header()
+  #Then el Color Picker debería cerrarse y
+  #When el usuario hace click en el Date Picker
+  #And el usuario hace clic fuera del Date Picker o presiona el botón “Esc”
+  #Then el Date Picker debería cerrarse, y su campo no deberia tener ningun cambio
+
 
 def test_submit_button(browser):
-  raise Exception("Incomplete Test")
+  web_form_under_test = WebFormPage(browser)
+  web_form_after_submit = Form_submitted_page(browser)
+  web_form_under_test.load()
+  # Given the user has filled all the mandatory fields on the form
+  web_form_under_test.click_text_input()
+  web_form_under_test.send_keys_to_text_input('Fill all the inputs')
+  web_form_under_test.click_password_input()
+  web_form_under_test.send_keys_to_password_input('MyTestPassword')
+  web_form_under_test.click_textarea_input()
+  web_form_under_test.send_keys_to_textarea_input('aQuestionablyLongTextString')
+  #DROPDOWN TEST NOT WORKING - STEPS SHOULD GO HERE
+  web_form_under_test.click_date_picker()
+  web_form_under_test.send_keys_to_date_picker(date.today().strftime("%m/%d/%Y"))
+  #Datalist thing not done yet
+  #File input test must be fixed first
+  #Range test not done yet
+  # When the User clicks the "Submit" button
+  web_form_under_test.submit_form()
+  # Then the page shows the message “Form submitted”
+  h1_success = 'Form submitted' # MUST FIX OBJECT MODEL LOGIC TO AVOID HAVING THIS CODE HERE
+  assert web_form_after_submit.h_form_submitted_text() == h1_success
+  # And the page shows the message “Received!”
+  correct_text = 'Received!' # MUST FIX OBJECT MODEL LOGIC TO AVOID HAVING THIS CODE HERE
+  assert web_form_after_submit.message_correct_text() == correct_text
+
+
+
+
+

@@ -32,6 +32,8 @@ class WebFormPage():
         self.default_radiobutton = self.browser.find_element(By.ID, "my-radio-1")
         self.checked_radiobutton = self.browser.find_element(By.ID, "my-radio-2")
         self.date_picker = self.browser.find_element(By.NAME, "my-date")
+        self.color_picker = self.browser.find_element(By.NAME, "my-colors")
+        self.title_header = self.browser.find_element(By.CLASS_NAME, 'display-6')
 
     def  date_picker_switch_deploy_and_click(self): #this function clicks the switchers to get the list of years
         self.switches_array = self.browser.find_elements(By.CLASS_NAME, "datepicker-switch")
@@ -146,3 +148,9 @@ class WebFormPage():
     #Get readonly property value from readonly field
     def readonly_text_field_value(self):
         return self.readonly_text_field.get_attribute('readOnly')
+
+    def click_color_picker(self):
+        self.color_picker.click()
+
+    def click_title_header(self):
+        self.tilte_header.click()
