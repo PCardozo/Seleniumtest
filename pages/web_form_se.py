@@ -4,6 +4,8 @@ import os
 import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.support.wait import WebDriverWait
 
 #cREATING THE pAGE oBJECT cLASS
 class WebFormPage():
@@ -34,6 +36,24 @@ class WebFormPage():
         self.date_picker = self.browser.find_element(By.NAME, "my-date")
         self.color_picker = self.browser.find_element(By.NAME, "my-colors")
         self.title_header = self.browser.find_element(By.CLASS_NAME, 'display-6')
+        self.range_picker = self.browser.find_element(By.CLASS_NAME, 'form-range')
+
+    def get_range_picker_value(self):
+        return int(self.range_picker.get_attribute("valueAsNumber"))
+
+    def get_range_picker_default_value(self):
+        return int(self.range_picker.get_attribute("defaultValue"))
+
+    def move_Range_picker(self,notches,direction):
+        lateral = notches*20
+        if (direction=="left"):
+            lateral = lateral*-1
+        action = ActionChains(self.browser)
+        action.click_and_hold(self.range_picker)
+        action.move_by_offset(lateral,0)
+        action.release(on_element=None)
+        action.perform()
+
 
     def  date_picker_switch_deploy_and_click(self): #this function clicks the switchers to get the list of years
         self.switches_array = self.browser.find_elements(By.CLASS_NAME, "datepicker-switch")

@@ -13,6 +13,7 @@
   "test_number_one.py::test_past_date",
   "test_number_one.py::test_prueba_uno",
   "test_number_one.py::test_radiobuttons",
+  "test_number_one.py::test_range_picker",
   "test_number_one.py::test_readonly_input",
   "test_number_one.py::test_submit_button",
   "test_number_one.py::test_textarea"

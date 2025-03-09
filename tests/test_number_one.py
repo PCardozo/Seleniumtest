@@ -267,6 +267,16 @@ def test_floating_elements(browser):
   #And el usuario hace clic fuera del Date Picker o presiona el botón “Esc”
   #Then el Date Picker debería cerrarse, y su campo no deberia tener ningun cambio
 
+def test_range_picker(browser):
+  notches = 2
+  #Given the User is at the Form page.
+  web_form_under_test = WebFormPage(browser)
+  web_form_under_test.load()
+  #When the User modifies the Range Picker to a specific value.
+  web_form_under_test.move_Range_picker(notches,"right")
+  #Then said value should be displayed correctly on the associated field.
+  assert web_form_under_test.get_range_picker_value()== web_form_under_test.get_range_picker_default_value()+notches
+
 
 def test_submit_button(browser):
   web_form_under_test = WebFormPage(browser)
