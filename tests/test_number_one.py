@@ -23,20 +23,14 @@ def test_prueba_uno(browser):
   correct_text = 'Received!' #Esta var asumo debería ir en el page obejct y no acá pero ni idea de como es la jugada, Aiura nawel pls
   h1_success = 'Form submitted'
   test_keys = 'charvarious'
-
-  web_form_under_test = WebFormPage(browser) #Pag. de inicio del form
-  web_form_after_submit = Form_submitted_page(browser) #Pagina una vez enviado el form
-
-  #ACT
+  web_form_under_test = WebFormPage(browser)#Pag. de inicio del form
+  web_form_after_submit = Form_submitted_page(browser)# Pagina una vez enviado el form
   # Given the User is in the web form page
   web_form_under_test.load()
-
   # When el usuario ingresa un texto válido en el campo de texto
   web_form_under_test.click_text_input()
   web_form_under_test.send_keys_to_text_input(test_keys)
   web_form_under_test.submit_form()
-
-  #ASSERT
   # Then el campo debe aceptar el texto y no mostrar mensajes de error
   assert web_form_after_submit.message_correct_text() == correct_text
   assert web_form_after_submit.h_form_submitted_text() == h1_success
@@ -44,27 +38,20 @@ def test_prueba_uno(browser):
   assert test_keys in curr_url
 
 def test_password_field(browser):
-  # ARRANGE
+
   correct_text = 'Received!' #Esta var asumo debería ir en el page obejct y no acá pero ni idea de como es la jugada, Aiura nawel pls
   h1_success = 'Form submitted'
   test_keys = 'Jhostynxon_Garcia'
-
-  #get the password field, click it, send keys, submit
   web_form_under_test = WebFormPage(browser)  # Pag. de inicio del form
   web_form_after_submit = Form_submitted_page(browser)  # Pagina una vez enviado el form
-
   # Given usuario está en la página del formulario.
   web_form_under_test.load()
-
-  # ACT
   # When el usuario ingresa una contraseña válida en el campo de contraseña
   web_form_under_test.click_password_input()
   web_form_under_test.send_keys_to_password_input(test_keys)
   assert web_form_under_test.password_input_value() == test_keys
   # Then el campo debe aceptar la contraseña y no mostrar mensajes de error.
   web_form_under_test.submit_form()
-
-  # ASSERT
   curr_url = browser.current_url
   assert web_form_after_submit.message_correct_text() == correct_text
   assert web_form_after_submit.h_form_submitted_text() == h1_success
@@ -248,19 +235,6 @@ def test_future_date(browser):
   web_form_under_test.click_date_day_element(target_day)
   # Then the selected date must be correctly displayed in its corresponding field.
   assert web_form_under_test.date_picker_value() == target_date
-
-def test_floating_elements(browser):
-  #Given el usuario está en la página del formulario.
-  web_form_under_test = WebFormPage(browser)
-  web_form_under_test.load()
-  #When el usuario hace click en el Color Picker
-  web_form_under_test.click_color_picker
-  #And el usuario hace clic fuera del Color Picker o presiona el botón “Esc”
-  web_form_under_test.click_title_header()
-  #Then el Color Picker debería cerrarse y
-  #When el usuario hace click en el Date Picker
-  #And el usuario hace clic fuera del Date Picker o presiona el botón “Esc”
-  #Then el Date Picker debería cerrarse, y su campo no deberia tener ningun cambio
 
 def test_range_picker(browser):
   notches = 2
