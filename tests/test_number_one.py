@@ -1,15 +1,10 @@
 
-
-
-
-
   # The browser argument passed to the function comes from the conftest.py file. That file contains a fixture
   # that is used for setup and cleanup of every individual test, so, whenever a test is executed
   # first is executed whatever comes before the yield statement contained in the fixture (setup)
   # and after the test is finished, whatever comes AFTER the yield statement gets executed (cleanup).
   # The conftest.py file must be located at the tests file. I think it's pytest what loads whatever is in there
   # to bring the arguments here, im not quite sure.
-
 
 import os
 import time
