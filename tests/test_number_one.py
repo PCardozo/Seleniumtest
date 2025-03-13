@@ -8,7 +8,7 @@
 
 import os
 import time
-#from email.policy import default
+from email.policy import default
 from datetime import date
 from pages.web_form_se import WebFormPage
 from pages.form_submitted import Form_submitted_page
@@ -17,25 +17,21 @@ from dateutil.relativedelta import relativedelta
 
   # Escenario 1: Validar el campo de texto
 
-def test_prueba_uno(browser):
+def test_prueba_uno(landing_page):
 
-  #ARRANGE
-  correct_text = 'Received!' #Esta var asumo debería ir en el page obejct y no acá pero ni idea de como es la jugada, Aiura nawel pls
-  h1_success = 'Form submitted'
+  correct_text = 'Received!' # CONSULTAR Esta var asumo debería ir en el page obejct y no acá pero ni idea de como es la jugada, Aiura nawel pls
+  h1_success_text = 'Form submitted'
   test_keys = 'charvarious'
-  web_form_under_test = WebFormPage(browser)#Pag. de inicio del form
-  web_form_after_submit = Form_submitted_page(browser)# Pagina una vez enviado el form
   # Given the User is in the web form page
-  web_form_under_test.load()
-  # When el usuario ingresa un texto válido en el campo de texto
-  web_form_under_test.click_text_input()
-  web_form_under_test.send_keys_to_text_input(test_keys)
-  web_form_under_test.submit_form()
-  # Then el campo debe aceptar el texto y no mostrar mensajes de error
-  assert web_form_after_submit.message_correct_text() == correct_text
-  assert web_form_after_submit.h_form_submitted_text() == h1_success
-  curr_url = browser.current_url
-  assert test_keys in curr_url
+  # When the user enters a valid text into the text input
+  landing_page.click_and_send_keys_to_input(landing_page.text_input,test_keys)
+  landing_page.submit_form()
+  web_form_after_submit = Form_submitted_page(landing_page.browser)
+  # Then the field accepts the value
+  assert web_form_after_submit.get_h_form_submitted_text() == h1_success_text
+  # And no error messages are shown
+  assert web_form_after_submit.get_received_message_text() == correct_text
+  assert test_keys in web_form_after_submit.get_current_url()
 
 def test_password_field(browser):
 

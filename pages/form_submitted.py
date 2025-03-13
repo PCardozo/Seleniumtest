@@ -1,5 +1,7 @@
 #Importing methods from selenium tools to lcoate stuff and to stroke keys
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 #cREATING THE pAGE oBJECT cLASS
 class Form_submitted_page():
@@ -11,13 +13,14 @@ class Form_submitted_page():
     def __init__(self,browser):
         self.browser = browser
 
-    #Interaction Methods
-    def message_correct_text(self):
-        message = self.browser.find_element(By.ID,self.MESSAGE_CORRECT)
-        message_text = message.get_attribute('textContent')
-        return message_text
+        self.h_form_submitted = self.browser.find_element(By.CLASS_NAME,"display-6")
+        self.received_message_label = self.browser.find_element(By.ID, 'message')
 
-    def h_form_submitted_text(self):
-        h1 = self.browser.find_element(By.CLASS_NAME,self.H_FORM_SUBMITTED)
-        h_text = h1.get_attribute('textContent')
-        return h_text
+    def get_received_message_text(self):
+        return self.received_message_label.get_attribute('textContent')
+
+    def get_h_form_submitted_text(self):
+        return self.h_form_submitted.get_attribute('textContent')
+
+    def get_current_url(self):
+        return self.browser.current_url

@@ -1,5 +1,5 @@
 
-#Importing methods from selenium tools to lcoate stuff and to stroke keys
+
 import os
 import time
 from selenium.webdriver.common.by import By
@@ -9,10 +9,6 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 #cREATING THE pAGE oBJECT cLASS
 class WebFormPage():
-    #Si hay muchos elementos del mismo tipo, vale la pena crear un métod.o que seleccione uno de ellos basado
-    # en una locator query que el tester le pase como argumento?
-    # (Para el joker una locator query es una normaltor query?)
-
     #URL
     URL = 'https://www.selenium.dev/selenium/web/web-form.html'
 
@@ -21,7 +17,6 @@ class WebFormPage():
         self.browser = browser
     def load(self):
         self.browser.get(self.URL)
-
         #Locators
         self.text_input = self.browser.find_element(By.NAME, "my-text")
         self.password_input = self.browser.find_element(By.NAME, "my-password")
@@ -37,6 +32,10 @@ class WebFormPage():
         self.color_picker = self.browser.find_element(By.NAME, "my-colors")
         self.title_header = self.browser.find_element(By.CLASS_NAME, 'display-6')
         self.range_picker = self.browser.find_element(By.CLASS_NAME, 'form-range')
+
+    def click_and_send_keys_to_input(self,web_element,text_to_send):
+        web_element.click()
+        web_element.send_keys(text_to_send)
 
     def get_range_picker_value(self):
         return int(self.range_picker.get_attribute("valueAsNumber"))
