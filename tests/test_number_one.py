@@ -14,38 +14,41 @@ from pages.web_form_se import WebFormPage
 from pages.form_submitted import Form_submitted_page
 from tests.conftest import browser
 from dateutil.relativedelta import relativedelta
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
-  # Escenario 1: Validar el campo de texto
+correct_text = 'Received!'
+h1_success_text = 'Form submitted'
+test_keys = 'charvarious'
+test_password = 'Jhostynxon_Garcia'
 
+def get_element_textcontent(webelement):
+  return webelement.get_attribute('textContent')
+
+# Escenario 1: Validate the text input
 def test_prueba_uno(landing_page):
-
-  correct_text = 'Received!' # CONSULTAR Esta var asumo debería ir en el page obejct y no acá pero ni idea de como es la jugada, Aiura nawel pls
-  h1_success_text = 'Form submitted'
-  test_keys = 'charvarious'
   # Given the User is in the web form page
   # When the user enters a valid text into the text input
   landing_page.click_and_send_keys_to_input(landing_page.text_input,test_keys)
   landing_page.submit_form()
   web_form_after_submit = Form_submitted_page(landing_page.browser)
   # Then the field accepts the value
-  assert web_form_after_submit.get_h_form_submitted_text() == h1_success_text
+  #assert get_element_textcontent(web_form_after_submit.h_form_submitted) == h1_success_text
   # And no error messages are shown
-  assert web_form_after_submit.get_received_message_text() == correct_text
+  assert web_form_after_submit.received_message_label.get_attribute('textContent') == correct_text
+  assert web_form_after_submit.h_form_submitted.get_attribute('textContent') == h1_success_text
   assert test_keys in web_form_after_submit.get_current_url()
 
 def test_password_field(browser):
 
-  correct_text = 'Received!' #Esta var asumo debería ir en el page obejct y no acá pero ni idea de como es la jugada, Aiura nawel pls
-  h1_success = 'Form submitted'
-  test_keys = 'Jhostynxon_Garcia'
   web_form_under_test = WebFormPage(browser)  # Pag. de inicio del form
   web_form_after_submit = Form_submitted_page(browser)  # Pagina una vez enviado el form
   # Given usuario está en la página del formulario.
   web_form_under_test.load()
   # When el usuario ingresa una contraseña válida en el campo de contraseña
   web_form_under_test.click_password_input()
-  web_form_under_test.send_keys_to_password_input(test_keys)
-  assert web_form_under_test.password_input_value() == test_keys
+  web_form_under_test.send_keys_to_password_input(test_password)
+  assert web_form_under_test.password_input_value() == test_password
   # Then el campo debe aceptar la contraseña y no mostrar mensajes de error.
   web_form_under_test.submit_form()
   curr_url = browser.current_url
