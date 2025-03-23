@@ -22,8 +22,11 @@ h1_success_text = 'Form submitted'
 test_keys = 'charvarious'
 test_password = 'Jhostynxon_Garcia'
 
+
+#This goes on the base page object
 def get_element_textcontent(webelement):
   return webelement.get_attribute('textContent')
+
 
 # Escenario 1: Validate the text input
 def test_prueba_uno(landing_page):
@@ -39,28 +42,22 @@ def test_prueba_uno(landing_page):
   assert web_form_after_submit.h_form_submitted.get_attribute('textContent') == h1_success_text
   assert test_keys in web_form_after_submit.get_current_url()
 
-def test_password_field(browser):
+def test_password_field(landing_page):
 
-  web_form_under_test = WebFormPage(browser)  # Pag. de inicio del form
-  web_form_after_submit = Form_submitted_page(browser)  # Pagina una vez enviado el form
+  #web_form_after_submit = Form_submitted_page(browser)  # Pagina una vez enviado el form
   # Given usuario está en la página del formulario.
-  web_form_under_test.load()
   # When el usuario ingresa una contraseña válida en el campo de contraseña
-  web_form_under_test.click_password_input()
-  web_form_under_test.send_keys_to_password_input(test_password)
-  assert web_form_under_test.password_input_value() == test_password
+  landing_page.click_and_send_keys_to_input(landing_page.password_input,test_password)
+  assert landing_page.password_input.get_attribute('value') == test_password
   # Then el campo debe aceptar la contraseña y no mostrar mensajes de error.
-  web_form_under_test.submit_form()
-  curr_url = browser.current_url
-  assert web_form_after_submit.message_correct_text() == correct_text
-  assert web_form_after_submit.h_form_submitted_text() == h1_success
-  assert test_keys in curr_url
+  landing_page.submit_form()
+  web_form_after_submit = Form_submitted_page(landing_page.browser)
+  curr_url = web_form_after_submit.browser.current_url
+  assert web_form_after_submit.received_message_label.get_attribute('textContent') == correct_text
+  assert web_form_after_submit.h_form_submitted.get_attribute('textContent') == h1_success_text
+  assert test_password in curr_url
 
 def test_textarea(browser):
-  # ARRANGE
-  correct_text = 'Received!'  # Esta var asumo debería ir en el page obejct y no acá pero ni idea de como es la jugada, Aiura nawel pls
-  h1_success = 'Form submitted'
-  test_keys = "atestinputiguess"
 
   web_form_under_test = WebFormPage(browser)  # Pag. de inicio del form
   web_form_after_submit = Form_submitted_page(browser)  # Pagina una vez enviado el form
