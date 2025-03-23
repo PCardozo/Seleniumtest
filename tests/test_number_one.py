@@ -28,12 +28,12 @@ def get_element_textcontent(webelement):
   return webelement.get_attribute('textContent')
 
 
-# Escenario 1: Validate the text input
+# Scenario 1: Validate text input
 def test_prueba_uno(landing_page):
   # Given the User is in the web form page
   # When the user enters a valid text into the text input
   landing_page.click_and_send_keys_to_input(landing_page.text_input,test_keys)
-  landing_page.submit_form()
+  landing_page.submit_button.click()
   web_form_after_submit = Form_submitted_page(landing_page.browser)
   # Then the field accepts the value
   #assert get_element_textcontent(web_form_after_submit.h_form_submitted) == h1_success_text
@@ -41,50 +41,37 @@ def test_prueba_uno(landing_page):
   assert web_form_after_submit.received_message_label.get_attribute('textContent') == correct_text
   assert web_form_after_submit.h_form_submitted.get_attribute('textContent') == h1_success_text
   assert test_keys in web_form_after_submit.get_current_url()
-
+# Scenario 2: Validate password input
 def test_password_field(landing_page):
-
-  #web_form_after_submit = Form_submitted_page(browser)  # Pagina una vez enviado el form
-  # Given usuario está en la página del formulario.
+  # Given the user is at the Form page.
   # When el usuario ingresa una contraseña válida en el campo de contraseña
   landing_page.click_and_send_keys_to_input(landing_page.password_input,test_password)
   assert landing_page.password_input.get_attribute('value') == test_password
   # Then el campo debe aceptar la contraseña y no mostrar mensajes de error.
-  landing_page.submit_form()
+  landing_page.submit_button.click()
   web_form_after_submit = Form_submitted_page(landing_page.browser)
   curr_url = web_form_after_submit.browser.current_url
   assert web_form_after_submit.received_message_label.get_attribute('textContent') == correct_text
   assert web_form_after_submit.h_form_submitted.get_attribute('textContent') == h1_success_text
   assert test_password in curr_url
-
-def test_textarea(browser):
-
-  web_form_under_test = WebFormPage(browser)  # Pag. de inicio del form
-  web_form_after_submit = Form_submitted_page(browser)  # Pagina una vez enviado el form
-
-  # Given usuario está en la página del formulario.
-  web_form_under_test.load()
-
-  # ACT
-  # When el usuario ingresa un texto en el textarea
-  # get the textarea, click it, send keys, submit
-  web_form_under_test.click_textarea_input()
-  web_form_under_test.send_keys_to_textarea_input(test_keys)
-  # Then el textarea debe aceptar el texto y mostrarlo correctamente.
-  web_form_under_test.submit_form()
-
-  # pytest -s .\test_number_one.py::test_textarea
-  # ASSERT
-  assert web_form_after_submit.message_correct_text() == correct_text
-  assert web_form_after_submit.h_form_submitted_text() == h1_success
-  curr_url = browser.current_url
+# Scenario 3: Validate textarea input
+def test_textarea(landing_page):
+  # Given the user is at the Form page.
+  # When the user inputs text into the textarea
+  landing_page.click_and_send_keys_to_input(landing_page.textarea_input,test_keys)
+  assert landing_page.textarea_input.get_attribute('value') == test_keys
+  # Then the textarea receives the text and displays it correctamente.
+  landing_page.submit_button.click()
+  web_form_after_submit = Form_submitted_page(landing_page.browser)
+  curr_url = web_form_after_submit.browser.current_url
+  assert web_form_after_submit.received_message_label.get_attribute('textContent') == correct_text
+  assert web_form_after_submit.h_form_submitted.get_attribute('textContent') == h1_success_text
   assert test_keys in curr_url
-
 def test_disabled_input(browser):
   # ARRANGE
   web_form_under_test = WebFormPage(browser)  # Pag. de inicio del form
 
-  # Given usuario está en la página del formulario.
+  # Given the user is at the Form page.
   web_form_under_test.load()
 
   # ACT
@@ -108,7 +95,7 @@ def test_dropdown_select(browser):
   # ARRANGE
   web_form_under_test = WebFormPage(browser)  # Pag. de inicio del form
 
-  # Given usuario está en la página del formulario.
+  # Given the user is at the Form page.
   web_form_under_test.load()
 
   # ACT
