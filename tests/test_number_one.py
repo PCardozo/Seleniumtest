@@ -22,6 +22,8 @@ h1_success_text = 'Form submitted'
 test_keys = 'charvarious'
 test_password = 'Jhostynxon_Garcia'
 dropDown_option_Text = "One"
+file_name = "testFileName.png"
+my_date = date.today().strftime("%m/%d/%Y")
 
 #This goes on the base page object
 def get_element_textcontent(webelement):
@@ -41,6 +43,7 @@ def test_prueba_uno(landing_page):
   assert web_form_after_submit.received_message_label.get_attribute('textContent') == correct_text
   assert web_form_after_submit.h_form_submitted.get_attribute('textContent') == h1_success_text
   assert test_keys in web_form_after_submit.get_current_url()
+
 # Scenario 2: Validate password input
 def test_password_field(landing_page):
   # Given the user is at the Form page.
@@ -54,6 +57,7 @@ def test_password_field(landing_page):
   assert web_form_after_submit.received_message_label.get_attribute('textContent') == correct_text
   assert web_form_after_submit.h_form_submitted.get_attribute('textContent') == h1_success_text
   assert test_password in curr_url
+
 # Scenario 3: Validate textarea input
 def test_textarea(landing_page):
   # Given the user is at the Form page.
@@ -67,18 +71,21 @@ def test_textarea(landing_page):
   assert web_form_after_submit.received_message_label.get_attribute('textContent') == correct_text
   assert web_form_after_submit.h_form_submitted.get_attribute('textContent') == h1_success_text
   assert test_keys in curr_url
+
 # Scenario 4: Validate disabled input
 def test_disabled_input(landing_page):
   # Given the user is at the Form page.
   # When the user tries to interact with the disabled input.
   # Then the field has the property "disabled".
   assert landing_page.disabled_input.get_attribute('disabled')
+
 # Scenario 5: Validate readonly input
 def test_readonly_input(landing_page):
   # Given the user is at the Form page.
   # When the user tries to edit the Readonly field.
   # Then the field has the Readonly property.
   assert landing_page.readonly_text_field.get_attribute('readOnly')
+
 # Scenario 6: Validate dropdown
 def test_dropdown_select(landing_page):
   # Given the user is at the Form page.
@@ -87,71 +94,51 @@ def test_dropdown_select(landing_page):
   # Then the selected option is displayed on the field.
   assert landing_page.get_selected_option_value(landing_page.dropdown_select,dropDown_option_Text) == dropDown_option_Text
 
-def test_dropdown_datalist(browser):
-  raise Exception("Incomplete Test")
+# Scenario 7: Validate dropdown datalist - Uses native elements ,cannot be tested
+#def test_dropdown_datalist(browser):
+  #raise Exception("Incomplete Test")
 
-def test_file_input(browser):
-  # Given el usuario está en la página del formulario.
-  #Arrange
-  web_form_under_test = WebFormPage(browser)
-  #path_to_file = "C:\\Users\\Usuario\\selenium-test-4\\env\\tests\\testFileName.png"
-  file_name = "testFileName.png"
+# Scenario 8: Validate File input
+def test_file_input(landing_page):
   file = os.path.join(os.getcwd(), file_name)
-  web_form_under_test.load()
+  # Given the user is at the Form page.
+  # When the user loads a file through the file input.
+  landing_page.file_input.send_keys(file)
+  # Then the file's name is displayed on the input field.
+  assert file_name in landing_page.file_input.get_attribute('value')
 
-  #ACT
-  # When el usuario carga un archivo a través del campo de entrada de archivo.
-  web_form_under_test.send_keys_to_file_input(file)
-  #web_form_under_test.click_file_input()
-  #web_form_under_test.select_file_to_upload(path_to_file) #Here you should type the path in your system pointing to the test file in the tests folder
-  #value.split(sep="\\")
-  data = web_form_under_test.file_input_value()
-  # Then el nombre del archivo debe mostrarse correctamente en el campo de entrada.
-  assert file_name in data
+# Scenario 9: Validate Checkboxes
+def test_checkboxes(landing_page):
+  # Given the User is at the Form page.
+  # When the User selects the "default checkbox"
+  landing_page.default_checkbox.click()
+  # Then the checkbox's state changes to "checked".
+  assert landing_page.default_checkbox.get_attribute("checked")
 
-def test_checkboxes(browser):
-  # ARRANGE
-  web_form_under_test = WebFormPage(browser)
+# Scenario 10: Validate Radiobuttons
+def test_radiobuttons(landing_page):
+  # Given the User is at the Form page.
+  # When the User selects the "default radiobutton"
+  landing_page.default_radiobutton.click()
+  # Then the default radiobutton's state changes to "checked".
+  assert landing_page.default_radiobutton.get_attribute("checked")
+  #And any other radiobuttons change to "unchecked".
+  assert landing_page.checked_radiobutton.get_attribute("checked") == None
 
-  #ACT
-  # Given el usuario está en la página del formulario.
-  web_form_under_test.load()
-  # When el usuario selecciona el checkbox por defecto.
-  web_form_under_test.click_default_checkbox()
-  #ASSERT
-  # Then el estado del checkbox debe cambiar a "checked".
-  assert web_form_under_test.default_checkbox_value()
+# Scenario 11: Validate Colorpicker - Uses native OS interface - Cannot be tested.
+#def test_color_picker(browser):
+  #raise Exception("Incomplete Test")
 
-def test_radiobuttons(browser):
-  #ARRANGE
-  #Given el usuario está en la página del formulario.
-  web_form_under_test = WebFormPage(browser)
-  web_form_under_test.load()
-  #ACT
-  #When el usuario selecciona un radio button por defecto.
-  web_form_under_test.click_default_radiobutton()
-  #ASSERT
-  #Then el estado del radio button debe cambiar a "checked"
-  assert web_form_under_test.default_radiobutton_value()
-  #And los otros radio buttons deben quedar en estado "unchecked".
-  assert web_form_under_test.checked_radiobutton_value() == None
-def test_color_picker(browser):
-  raise Exception("Incomplete Test")
-
-def test_date_picker_format(browser):
-  # Given el usuario está en la página del formulario.
-  my_date = date.today().strftime("%m/%d/%Y") #Fecha formateada en americano
-  day_value = my_date.split('/')[1]
-  web_form_under_test = WebFormPage(browser)
-  web_form_under_test.load()
-  # When el usuario selecciona una fecha válida en el selector de fecha.
-  web_form_under_test.date_picker.click()
-  web_form_under_test.click_date_day_element(day_value)
-  # Then la fecha seleccionada debe reflejarse correctamente en el campo.
-  assert web_form_under_test.date_picker_value() == my_date
+# Scenario 12: Validate Date Picker
+def test_date_picker_format(landing_page):
+  # Given the User is at the Form page.
+  # When the user selects a valid date in the Date Picker.
+  landing_page.select_date(my_date)
+  # Then the selected Date is displayed on the field.
+  assert landing_page.date_picker.get_attribute("value") == my_date
 
 def test_past_date(browser):
-  # Given el usuario está en la página del formulario.
+  # Given the User is at the Form page.
 
   #my_date = date.today().strftime("%m/%d/%Y") # Consigo fecha de hoy en Formato Americano
   my_date = date.today()
@@ -171,16 +158,12 @@ def test_past_date(browser):
   # Then la fecha seleccionada debe reflejarse correctamente en el campo.
   assert web_form_under_test.date_picker_value() == target_date
 
-def test_manual_date_picker_date(browser):
-  # Given el usuario está en la página del formulario.
-  web_form_under_test = WebFormPage(browser)
-  web_form_under_test.load()
-  # When el usuario ingresa directamente una fecha válida en el selector de fecha.
-  web_form_under_test.click_date_picker()
-  target_date = date.today().strftime("%m/%d/%Y")
-  web_form_under_test.send_keys_to_date_picker(target_date)
-  # Then la fecha seleccionada debe reflejarse correctamente en el campo.
-  assert web_form_under_test.date_picker_value() == target_date
+def test_manual_date_picker_date(landing_page):
+  # Given the User is at the Form page.
+  # When the User manually enters a valid Date on the Date picker
+  landing_page.click_and_send_keys_to_input(landing_page.date_picker,my_date)
+  # Then the selected Date is diplayed on the field.
+  assert landing_page.date_picker.get_attribute('value') == my_date
 
 def test_future_date(browser):
   my_date = date.today()
@@ -189,7 +172,7 @@ def test_future_date(browser):
   target_year = target_date.split("/")[2]
   target_day = target_date.split("/")[1]
   web_form_under_test = WebFormPage(browser)
-  # Given the user is viewing the form page
+  # Given the User is at the Form page.
   web_form_under_test.load()
   # When the user selects a date in the the future
   web_form_under_test.click_date_picker()
@@ -200,11 +183,9 @@ def test_future_date(browser):
   # Then the selected date must be correctly displayed in its corresponding field.
   assert web_form_under_test.date_picker_value() == target_date
 
-def test_range_picker(browser):
+def test_range_picker(landing_page):
   notches = 2
   #Given the User is at the Form page.
-  web_form_under_test = WebFormPage(browser)
-  web_form_under_test.load()
   #When the User modifies the Range Picker to a specific value.
   web_form_under_test.move_Range_picker(notches,"right")
   #Then said value should be displayed correctly on the associated field.
