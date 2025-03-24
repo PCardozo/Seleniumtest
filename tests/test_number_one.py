@@ -21,7 +21,7 @@ correct_text = 'Received!'
 h1_success_text = 'Form submitted'
 test_keys = 'charvarious'
 test_password = 'Jhostynxon_Garcia'
-
+dropDown_option_Text = "One"
 
 #This goes on the base page object
 def get_element_textcontent(webelement):
@@ -44,10 +44,10 @@ def test_prueba_uno(landing_page):
 # Scenario 2: Validate password input
 def test_password_field(landing_page):
   # Given the user is at the Form page.
-  # When el usuario ingresa una contraseña válida en el campo de contraseña
+  # When the user inputs a valid password in the password field
   landing_page.click_and_send_keys_to_input(landing_page.password_input,test_password)
   assert landing_page.password_input.get_attribute('value') == test_password
-  # Then el campo debe aceptar la contraseña y no mostrar mensajes de error.
+  # Then the field accepts the password and no error messages are shown.
   landing_page.submit_button.click()
   web_form_after_submit = Form_submitted_page(landing_page.browser)
   curr_url = web_form_after_submit.browser.current_url
@@ -67,44 +67,25 @@ def test_textarea(landing_page):
   assert web_form_after_submit.received_message_label.get_attribute('textContent') == correct_text
   assert web_form_after_submit.h_form_submitted.get_attribute('textContent') == h1_success_text
   assert test_keys in curr_url
-def test_disabled_input(browser):
-  # ARRANGE
-  web_form_under_test = WebFormPage(browser)  # Pag. de inicio del form
-
+# Scenario 4: Validate disabled input
+def test_disabled_input(landing_page):
   # Given the user is at the Form page.
-  web_form_under_test.load()
-
-  # ACT
-  # When el usuario intenta interactuar con el campo de entrada deshabilitado.
-  # Then el campo debe tener la propiedad disabled en su locator.
-
-  # ASSERT
-  assert web_form_under_test.disabled_input_value()
-
-def test_readonly_input(browser):
-  web_form_under_test = WebFormPage(browser)
-  # Given el usuario está en la página del formulario.
-  web_form_under_test.load()
-
-  # ACT
-  # When el usuario intenta editar el campo de entrada de solo lectura.
-  # Then el campo debe tener la propiedad readonly en su locator.
-  assert web_form_under_test.readonly_text_field_value()
-
-def test_dropdown_select(browser):
-  # ARRANGE
-  web_form_under_test = WebFormPage(browser)  # Pag. de inicio del form
-
+  # When the user tries to interact with the disabled input.
+  # Then the field has the property "disabled".
+  assert landing_page.disabled_input.get_attribute('disabled')
+# Scenario 5: Validate readonly input
+def test_readonly_input(landing_page):
   # Given the user is at the Form page.
-  web_form_under_test.load()
-
-  # ACT
-  # When el usuario selecciona una opción del dropdown (select).
-  web_form_under_test.click_dropdown_select()
-  web_form_under_test.click_dropdown_select_option()
-  #Then la opción seleccionada debe reflejarse correctamente en el campo.
-  #ASSERT
-  assert web_form_under_test.dropdown_select_current_value() == web_form_under_test.dropdown_select_option_value()
+  # When the user tries to edit the Readonly field.
+  # Then the field has the Readonly property.
+  assert landing_page.readonly_text_field.get_attribute('readOnly')
+# Scenario 6: Validate dropdown
+def test_dropdown_select(landing_page):
+  # Given the user is at the Form page.
+  # When the user selects an option from the dropdown
+  landing_page.select_from_dropdown(landing_page.dropdown_select,dropDown_option_Text)
+  # Then the selected option is displayed on the field.
+  assert landing_page.get_selected_option_value(landing_page.dropdown_select,dropDown_option_Text) == dropDown_option_Text
 
 def test_dropdown_datalist(browser):
   raise Exception("Incomplete Test")

@@ -4,6 +4,7 @@ import os
 import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.wait import WebDriverWait
 
@@ -24,6 +25,7 @@ class WebFormPage():
         self.textarea_input = self.browser.find_element(By.NAME, "my-textarea")
         self.disabled_input = self.browser.find_element(By.NAME, "my-disabled")
         self.readonly_text_field = self.browser.find_element(By.NAME, "my-readonly")
+        self.dropdown_select = self.browser.find_element(By.CLASS_NAME,"form-select")
         self.file_input = self.browser.find_element(By.NAME,"my-file")
         self.default_checkbox = self.browser.find_element(By.ID,"my-check-2")
         self.default_radiobutton = self.browser.find_element(By.ID, "my-radio-1")
@@ -32,6 +34,14 @@ class WebFormPage():
         self.color_picker = self.browser.find_element(By.NAME, "my-colors")
         self.title_header = self.browser.find_element(By.CLASS_NAME, 'display-6')
         self.range_picker = self.browser.find_element(By.CLASS_NAME, 'form-range')
+
+    def select_from_dropdown(self,dropdownElement,optionTextValue):
+        select = Select(dropdownElement)
+        select.select_by_visible_text(optionTextValue)
+
+    def get_selected_option_value(self,dropdownElement,optionTextValue):
+        select = Select(dropdownElement)
+        return select.first_selected_option.text
 
     def click_and_send_keys_to_input(self,web_element,text_to_send):
         web_element.click()
