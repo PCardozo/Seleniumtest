@@ -23,7 +23,12 @@ test_keys = 'charvarious'
 test_password = 'Jhostynxon_Garcia'
 dropDown_option_Text = "One"
 file_name = "testFileName.png"
+#Dates are tested in mmddyyyy format!!
 my_date = date.today().strftime("%m/%d/%Y")
+past_date = (date.today() - relativedelta(years=2, months=2, days=2)).strftime("%m/%d/%Y")
+future_date = (date.today() + relativedelta(years=1, months=1, days=1)).strftime("%m/%d/%Y")
+#future_date = (date.today() + relativedelta(years=3)).strftime("%m/%d/%Y")
+range_picker_notches = 2
 
 #This goes on the base page object
 def get_element_textcontent(webelement):
@@ -137,26 +142,12 @@ def test_date_picker_format(landing_page):
   # Then the selected Date is displayed on the field.
   assert landing_page.date_picker.get_attribute("value") == my_date
 
-def test_past_date(browser):
+def test_past_date(landing_page):
   # Given the User is at the Form page.
-
-  #my_date = date.today().strftime("%m/%d/%Y") # Consigo fecha de hoy en Formato Americano
-  my_date = date.today()
-  calculate_date = my_date - relativedelta(years=2, months=2, days=2)
-  target_date = calculate_date.strftime("%m/%d/%Y")
-  target_year = target_date.split("/")[2]
-  target_day = target_date.split("/")[1]
-  # When el usuario selecciona una fecha igual a la fecha actual pero dos años, dos meses y dos días atrás
-  web_form_under_test = WebFormPage(browser)
-  web_form_under_test.load()
-  web_form_under_test.click_date_picker()
-  web_form_under_test.date_picker_switch_deploy_and_click()
-  web_form_under_test.date_picker_switch_click_years(target_year)
-  web_form_under_test.date_picker_switch_find_and_click_month(calculate_date.strftime("%B")[0:3])
-  web_form_under_test.click_date_day_element(target_day)
-  time.sleep(2)
-  # Then la fecha seleccionada debe reflejarse correctamente en el campo.
-  assert web_form_under_test.date_picker_value() == target_date
+  # When the User selects a date equal to today's date, but 2 years, 2 months and 2 days in the past
+  landing_page.select_date(past_date)
+  # Then the selected date should be reflected on the corresponding field
+  assert landing_page.date_picker.get_attribute('value')== past_date
 
 def test_manual_date_picker_date(landing_page):
   # Given the User is at the Form page.
@@ -165,31 +156,19 @@ def test_manual_date_picker_date(landing_page):
   # Then the selected Date is diplayed on the field.
   assert landing_page.date_picker.get_attribute('value') == my_date
 
-def test_future_date(browser):
-  my_date = date.today()
-  calculate_date = my_date + relativedelta(years=1, months=1, days=1)
-  target_date = calculate_date.strftime("%m/%d/%Y")
-  target_year = target_date.split("/")[2]
-  target_day = target_date.split("/")[1]
-  web_form_under_test = WebFormPage(browser)
+def test_future_date(landing_page):
   # Given the User is at the Form page.
-  web_form_under_test.load()
   # When the user selects a date in the the future
-  web_form_under_test.click_date_picker()
-  web_form_under_test.date_picker_switch_deploy_and_click()
-  web_form_under_test.date_picker_switch_click_years(target_year)
-  web_form_under_test.date_picker_switch_find_and_click_month(calculate_date.strftime("%B")[0:3])
-  web_form_under_test.click_date_day_element(target_day)
+  landing_page.select_date(future_date)
   # Then the selected date must be correctly displayed in its corresponding field.
-  assert web_form_under_test.date_picker_value() == target_date
+  assert landing_page.date_picker.get_attribute('value') == future_date
 
 def test_range_picker(landing_page):
-  notches = 2
   #Given the User is at the Form page.
   #When the User modifies the Range Picker to a specific value.
-  web_form_under_test.move_Range_picker(notches,"right")
+  web_form_under_test.move_Range_picker(range_picker_notches,"right")
   #Then said value should be displayed correctly on the associated field.
-  assert web_form_under_test.get_range_picker_value()== web_form_under_test.get_range_picker_default_value()+notches
+  assert web_form_under_test.get_range_picker_value()== web_form_under_test.get_range_picker_default_value()+range_picker_notches
 
 
 def test_submit_button(browser):
@@ -206,16 +185,13 @@ def test_submit_button(browser):
   #DROPDOWN TEST NOT WORKING - STEPS SHOULD GO HERE
   web_form_under_test.click_date_picker()
   web_form_under_test.send_keys_to_date_picker(date.today().strftime("%m/%d/%Y"))
-  #Datalist thing not done yet
   #File input test must be fixed first
   #Range test not done yet
   # When the User clicks the "Submit" button
   web_form_under_test.submit_form()
   # Then the page shows the message “Form submitted”
-  h1_success = 'Form submitted' # MUST FIX OBJECT MODEL LOGIC TO AVOID HAVING THIS CODE HERE
-  assert web_form_after_submit.h_form_submitted_text() == h1_success
+  assert web_form_after_submit.h_form_submitted_text() == h1_success_text
   # And the page shows the message “Received!”
-  correct_text = 'Received!' # MUST FIX OBJECT MODEL LOGIC TO AVOID HAVING THIS CODE HERE
   assert web_form_after_submit.message_correct_text() == correct_text
 
 
