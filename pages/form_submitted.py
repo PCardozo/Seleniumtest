@@ -14,13 +14,14 @@ class Form_submitted_page():
         self.browser = browser
 
         self.h_form_submitted = self.browser.find_element(By.CLASS_NAME,"display-6")
+        self.h_form_locator= "display-6"
         self.received_message_label = self.browser.find_element(By.ID, 'message')
 
     def get_received_message_text(self):
         return self.received_message_label.get_attribute('textContent')
 
-    def get_h_form_submitted_text(self):
-        return self.h_form_submitted.get_attribute('textContent')
+    def get_h_form_text_value(self):
+        return self.browser.find_element(By.CLASS_NAME,"display-6").get_attribute('textContent')
 
     def get_current_url(self):
         return self.browser.current_url
