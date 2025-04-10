@@ -1,32 +1,28 @@
-
-import re
-import os
-import time
 import calendar
 from datetime import date
-
-from select import select
+from pages.base_page import Base_page
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.action_chains import ActionChains
 
 
 
 #cREATING THE pAGE oBJECT cLASS
-class WebFormPage():
+class WebFormPage(Base_page):
     #URL
     URL = 'https://www.selenium.dev/selenium/web/web-form.html'
 
+    #LOCATORS
+    TEXT_INPUT = (By.NAME, "my-text")
+    SUBMIT_BUTTON = (By.CLASS_NAME, 'btn.btn-outline-primary.mt-3')
     #Initialization
     def __init__(self,browser):
-        self.browser = browser
+        super().__init__(browser)
+
     def load(self):
         self.browser.get(self.URL)
         #Locators
-        self.text_input = self.browser.find_element(By.NAME, "my-text")
         self.password_input = self.browser.find_element(By.NAME, "my-password")
-        self.submit_button = self.browser.find_element(By.CLASS_NAME, 'btn.btn-outline-primary.mt-3')
         self.textarea_input = self.browser.find_element(By.NAME, "my-textarea")
         self.disabled_input = self.browser.find_element(By.NAME, "my-disabled")
         self.readonly_text_field = self.browser.find_element(By.NAME, "my-readonly")
@@ -102,10 +98,6 @@ class WebFormPage():
     def get_selected_option_value(self,dropdownElement,optionTextValue):
         select = Select(dropdownElement)
         return select.first_selected_option.text
-
-    def click_and_send_keys_to_input(self,web_element,text_to_send):
-        web_element.click()
-        web_element.send_keys(text_to_send)
 
     def get_range_picker_value(self):
         return int(self.range_picker.get_attribute("valueAsNumber"))

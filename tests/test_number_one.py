@@ -31,36 +31,18 @@ past_date = (date.today() - relativedelta(years=2, months=2, days=2)).strftime("
 future_date = (date.today() + relativedelta(years=1, months=1, days=1)).strftime("%m/%d/%Y")
 range_picker_notches = 2
 
-#This goes on the base page object
-def get_element_textcontent(webelement):
-  return webelement.get_attribute('textContent')
-
-
 # Scenario 1: Validate text input
-def test_prueba_uno(landing_page):
+def test_input_field(landing_page):
   # Given the User is in the web form page
   # When the user enters a valid text into the text input
-  landing_page.click_and_send_keys_to_input(landing_page.text_input,test_keys)
-  landing_page.submit_button.click()
-  web_form_after_submit = Form_submitted_page(landing_page.browser)
+  landing_page.click_and_send_keys_to_input(landing_page.TEXT_INPUT,test_keys)
+  landing_page.click_element(landing_page.SUBMIT_BUTTON)
+  wform_submitted = Form_submitted_page(landing_page.browser)
   # Then the field accepts the value
   # And no error messages are shown
-  try:#STALE ELEMENT EXCPETION - HOW CAN WE HANDLE THIS SCHEISSE?
-    assert web_form_after_submit.received_message_label.get_attribute('textContent') == correct_text
-    assert test_keys in web_form_after_submit.get_current_url()
-  except StaleElementReferenceException as e:
-    print("Stale element exception on Success label assertion, retrying...")
-    time.sleep(3)
-    assert web_form_after_submit.received_message_label.get_attribute('textContent') == correct_text
-
-  try:
-    assert web_form_after_submit.h_form_submitted.get_attribute('textContent') == h1_success_text
-  except StaleElementReferenceException as e:
-    print("Stale element exception on Header assertion, retrying...")
-    time.sleep(3)
-    assert web_form_after_submit.h_form_submitted.get_attribute('textContent') == h1_success_text
-
-  assert test_keys in web_form_after_submit.get_current_url()
+  assert wform_submitted.get_element_attribute_value(wform_submitted.MESSAGE_CORRECT,'textContent') == correct_text
+  assert wform_submitted.get_element_attribute_value(wform_submitted.H_FORM_SUBMITTED,'textContent') == h1_success_text
+  assert test_keys in wform_submitted.get_current_url()
 
 # Scenario 2: Validate password input
 def test_password_field(landing_page):
