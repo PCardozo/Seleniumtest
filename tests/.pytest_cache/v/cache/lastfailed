@@ -3,5 +3,5 @@
   "test_number_one.py::test_color_picker": true,
   "test_number_one.py::test_floating_elements": true,
   "test_number_one.py": true,
-  "test_number_one.py::test_password_field": true
+  "test_number_one.py::test_submit_button": true
 }
