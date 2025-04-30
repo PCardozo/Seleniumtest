@@ -1,8 +1,4 @@
 
-
-
-
-
   # The browser argument passed to the function comes from the conftest.py file. That file contains a fixture
   # that is used for setup and cleanup of every individual test, so, whenever a test is executed
   # first is executed whatever comes before the yield statement contained in the fixture (setup)
@@ -10,149 +6,181 @@
   # The conftest.py file must be located at the tests file. I think it's pytest what loads whatever is in there
   # to bring the arguments here, im not quite sure.
 
-
-
-
+import os
+import time
+from email.policy import default
+from datetime import date
 from pages.web_form_se import WebFormPage
 from pages.form_submitted import Form_submitted_page
+from tests.conftest import browser
+from dateutil.relativedelta import relativedelta
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import StaleElementReferenceException
 
-  # Escenario 1: Validar el campo de texto
+correct_text = 'Received!'
+h1_success_text = 'Form submitted'
+test_keys = 'charvarious'
+test_password = 'Jhostynxon_Garcia'
+dropDown_option_Text = "One"
+file_name = "testFileName.png"
+file = os.path.join(os.getcwd(), file_name)#This file is cooked in the tests folder
+#Dates are tested in mmddyyyy format!!
+my_date = date.today().strftime("%m/%d/%Y")
+past_date = (date.today() - relativedelta(years=2, months=2, days=2)).strftime("%m/%d/%Y")
+future_date = (date.today() + relativedelta(years=1, months=1, days=1)).strftime("%m/%d/%Y")
+range_picker_notches = 2
 
-def test_prueba_uno(browser):
-
-  #ARRANGE
-  correct_text = 'Received!' #Esta var asumo debería ir en el page obejct y no acá pero ni idea de como es la jugada, Aiura nawel pls
-  h1_success = 'Form submitted'
-  test_keys = 'charvarious'
-
-  web_form_under_test = WebFormPage(browser) #Pag. de inicio del form
-  web_form_after_submit = Form_submitted_page(browser) #Pagina una vez enviado el form
-
-  #ACT
+# Scenario 1: Validate text input
+def test_input_field(landing_page):
   # Given the User is in the web form page
-  web_form_under_test.load()
+  # When the user enters a valid text into the text input
+  landing_page.click_and_send_keys_to_input(landing_page.TEXT_INPUT,test_keys)
+  landing_page.click_element(landing_page.SUBMIT_BUTTON)
+  wform_submitted = Form_submitted_page(landing_page.browser)
+  # Then the field accepts the value
+  # And no error messages are shown
+  assert wform_submitted.get_element_attribute_value(wform_submitted.MESSAGE_CORRECT,'textContent') == correct_text
+  assert wform_submitted.get_element_attribute_value(wform_submitted.H_FORM_SUBMITTED,'textContent') == h1_success_text
+  assert test_keys in wform_submitted.get_current_url()
 
-  # When el usuario ingresa un texto válido en el campo de texto
-  web_form_under_test.click_text_input()
-  web_form_under_test.send_keys_to_text_input(test_keys)
-  web_form_under_test.submit_form()
+# Scenario 2: Validate password input
+def test_password_field(landing_page):
+  # Given the user is at the Form page.
+  # When the user inputs a valid password in the password field
+  landing_page.click_and_send_keys_to_input(landing_page.PASSWORD_FIELD,test_password)
+  assert landing_page.get_element_attribute_value(landing_page.PASSWORD_FIELD, 'value') == test_password
+  landing_page.click_element(landing_page.SUBMIT_BUTTON)
+  # Then the field accepts the password and no error messages are shown.
+  wform_submitted = Form_submitted_page(landing_page.browser)
+  assert wform_submitted.get_element_attribute_value(wform_submitted.MESSAGE_CORRECT,'textContent') == correct_text
+  assert wform_submitted.get_element_attribute_value(wform_submitted.H_FORM_SUBMITTED,'textContent') == h1_success_text
+  assert test_password in wform_submitted.get_current_url()
 
-  #ASSERT
-  # Then el campo debe aceptar el texto y no mostrar mensajes de error
-  assert web_form_after_submit.message_correct_text() == correct_text
-  assert web_form_after_submit.h_form_submitted_text() == h1_success
-  curr_url = browser.current_url
-  assert test_keys in curr_url
+# Scenario 3: Validate textarea input
+def test_textarea(landing_page):
+  # Given the user is at the Form page.
+  # When the user inputs text into the textarea
+  landing_page.click_and_send_keys_to_input(landing_page.TEXTAREA,test_keys)
+  assert landing_page.get_element_attribute_value(landing_page.TEXTAREA,'value') == test_keys
+  landing_page.click_element(landing_page.SUBMIT_BUTTON)
+  wform_submitted = Form_submitted_page(landing_page.browser)
+  # Then the textarea receives the text and displays it correctly.
+  assert wform_submitted.get_element_attribute_value(wform_submitted.MESSAGE_CORRECT,'textContent') == correct_text
+  assert wform_submitted.get_element_attribute_value(wform_submitted.H_FORM_SUBMITTED,'textContent') == h1_success_text
+  assert test_keys in wform_submitted.get_current_url()
 
-def test_password_field(browser):
-  # ARRANGE
-  correct_text = 'Received!' #Esta var asumo debería ir en el page obejct y no acá pero ni idea de como es la jugada, Aiura nawel pls
-  h1_success = 'Form submitted'
-  test_keys = 'Jhostynxon_Garcia'
+# Scenario 4: Validate disabled input
+def test_disabled_input(landing_page):
+  # Given the user is at the Form page.
+  # When the user tries to interact with the disabled input.
+  # Then the field has the property "disabled".
+  assert landing_page.get_element_attribute_value(landing_page.DISABLED_INPUT,'disabled')
 
-  #get the password field, click it, send keys, submit
-  web_form_under_test = WebFormPage(browser)  # Pag. de inicio del form
-  web_form_after_submit = Form_submitted_page(browser)  # Pagina una vez enviado el form
+# Scenario 5: Validate readonly input
+def test_readonly_input(landing_page):
+  # Given the user is at the Form page.
+  # When the user tries to edit the Readonly field.
+  # Then the field has the Readonly property.
+  assert landing_page.get_element_attribute_value(landing_page.READONLY,'readOnly')
 
-  # Given usuario está en la página del formulario.
-  web_form_under_test.load()
+# Scenario 6: Validate dropdown
+def test_dropdown_select(landing_page):
+  # Given the user is at the Form page.
+  # When the user selects an option from the dropdown
+  landing_page.select_from_dropdown(landing_page.DROPDOWN_SELECT,dropDown_option_Text)
+  # Then the selected option is displayed on the field.
+  assert landing_page.get_selected_option_value(landing_page.DROPDOWN_SELECT) == dropDown_option_Text
 
-  # ACT
-  # When el usuario ingresa una contraseña válida en el campo de contraseña
-  web_form_under_test.click_password_input()
-  web_form_under_test.send_keys_to_password_input(test_keys)
-  assert web_form_under_test.password_input_value() == test_keys
-  # Then el campo debe aceptar la contraseña y no mostrar mensajes de error.
-  web_form_under_test.submit_form()
+# Scenario 7: Validate dropdown datalist - Uses native elements ,cannot be tested
+#def test_dropdown_datalist(browser):
+  #raise Exception("Incomplete Test")
 
-  # ASSERT
-  curr_url = browser.current_url
-  assert web_form_after_submit.message_correct_text() == correct_text
-  assert web_form_after_submit.h_form_submitted_text() == h1_success
-  assert test_keys in curr_url
+# Scenario 8: Validate File input
+def test_file_input(landing_page):
+  # Given the user is at the Form page.
+  # When the user loads a file through the file input.
+  landing_page.browser.find_element(*landing_page.FILE_INPUT).send_keys(file)
+  # Then the file's name is displayed on the input field.
+  assert file_name in landing_page.get_element_attribute_value(landing_page.FILE_INPUT,'value')
 
-def test_textarea(browser):
-  # ARRANGE
-  correct_text = 'Received!'  # Esta var asumo debería ir en el page obejct y no acá pero ni idea de como es la jugada, Aiura nawel pls
-  h1_success = 'Form submitted'
-  test_keys = "atestinputiguess"
+# Scenario 9: Validate Checkboxes
+def test_checkboxes(landing_page):
+  # Given the User is at the Form page.
+  # When the User selects the "default checkbox"
+  landing_page.click_element(landing_page.DEFAULT_CHK)
+  # Then the checkbox's state changes to "checked".
+  assert landing_page.get_element_attribute_value(landing_page.DEFAULT_CHK,"checked")
 
-  web_form_under_test = WebFormPage(browser)  # Pag. de inicio del form
-  web_form_after_submit = Form_submitted_page(browser)  # Pagina una vez enviado el form
+# Scenario 10: Validate Radiobuttons
+def test_radiobuttons(landing_page):
+  # Given the User is at the Form page.
+  # When the User selects the "default radiobutton"
+  landing_page.click_element(landing_page.DEFAULT_RADIO)
+  # Then the default radiobutton's state changes to "checked".
+  assert landing_page.get_element_attribute_value(landing_page.DEFAULT_RADIO, "checked")
+  #And any other radiobuttons change to "unchecked".
+  assert landing_page.get_element_attribute_value(landing_page.CHECKED_RADIO, "checked") == None
 
-  # Given usuario está en la página del formulario.
-  web_form_under_test.load()
+# Scenario 11: Validate Colorpicker - Uses native OS interface - Cannot be tested.
+#def test_color_picker(browser):
+  #raise Exception("Incomplete Test")
 
-  # ACT
-  # When el usuario ingresa un texto en el textarea
-  # get the textarea, click it, send keys, submit
-  web_form_under_test.click_textarea_input()
-  web_form_under_test.send_keys_to_textarea_input(test_keys)
-  # Then el textarea debe aceptar el texto y mostrarlo correctamente.
-  web_form_under_test.submit_form()
+# Scenario 12: Validate Date Picker
+def test_date_picker_format(landing_page):
+  # Given the User is at the Form page.
+  # When the user selects a valid date in the Date Picker.
+  landing_page.select_date(my_date)
+  # Then the selected Date is displayed on the field.
+  assert landing_page.get_element_attribute_value(landing_page.DATE_PICKER, "value") == my_date
 
-  # pytest -s .\test_number_one.py::test_textarea
-  # ASSERT
-  assert web_form_after_submit.message_correct_text() == correct_text
-  assert web_form_after_submit.h_form_submitted_text() == h1_success
-  curr_url = browser.current_url
-  assert test_keys in curr_url
+def test_past_date(landing_page):
+  # Given the User is at the Form page.
+  # When the User selects a date equal to today's date, but 2 years, 2 months and 2 days in the past
+  landing_page.select_date(past_date)
+  # Then the selected date should be reflected on the corresponding field
+  assert landing_page.get_element_attribute_value(landing_page.DATE_PICKER, "value") == past_date
 
-def test_disabled_input(browser):
-  # ARRANGE
-  web_form_under_test = WebFormPage(browser)  # Pag. de inicio del form
+def test_manual_date_picker_date(landing_page):
+  # Given the User is at the Form page.
+  # When the User manually enters a valid Date on the Date picker
+  landing_page.click_and_send_keys_to_input(landing_page.DATE_PICKER,my_date)
+  # Then the selected Date is diplayed on the field.
+  assert landing_page.get_element_attribute_value(landing_page.DATE_PICKER, "value") == my_date
 
-  # Given usuario está en la página del formulario.
-  web_form_under_test.load()
+def test_future_date(landing_page):
+  # Given the User is at the Form page.
+  # When the user selects a date in the the future
+  landing_page.select_date(future_date)
+  # Then the selected date must be correctly displayed in its corresponding field.
+  assert landing_page.get_element_attribute_value(landing_page.DATE_PICKER, "value") == future_date
 
-  # ACT
-  # When el usuario intenta interactuar con el campo de entrada deshabilitado.
-  # Then el campo debe tener la propiedad disabled en su locator.
+def test_range_picker(landing_page):
+  #Given the User is at the Form page.
+  #When the User modifies the Range Picker to a specific value.
+  landing_page.move_Range_picker(range_picker_notches,"right")
+  #Then said value should be displayed correctly on the associated field.
+  assert int(landing_page.get_element_attribute_value(landing_page.RANGE_PICKER,"valueAsNumber")) == int(landing_page.get_element_attribute_value(landing_page.RANGE_PICKER,"defaultValue")) + range_picker_notches
 
-  # ASSERT
-  assert web_form_under_test.disabled_input_value()
 
-def test_readonly_input(browser):
-  # ARRANGE
-  web_form_under_test = WebFormPage(browser)
+def test_submit_button(landing_page):
+  # Given the user has filled all the mandatory fields on the form
+  landing_page.click_and_send_keys_to_input(landing_page.TEXT_INPUT, test_keys)
+  landing_page.click_and_send_keys_to_input(landing_page.PASSWORD_FIELD, test_password)
+  landing_page.click_and_send_keys_to_input(landing_page.TEXTAREA, test_keys)
+  landing_page.select_from_dropdown(landing_page.DROPDOWN_SELECT,dropDown_option_Text)
+  landing_page.select_date(my_date)
+  landing_page.browser.find_element(*landing_page.FILE_INPUT).send_keys(file)
+  landing_page.move_Range_picker(range_picker_notches,"right")
+  # When the User clicks the "Submit" button
+  landing_page.click_element(landing_page.SUBMIT_BUTTON)
+  wform_submitted = Form_submitted_page(landing_page.browser)
+  # Then the page shows the message “Form submitted”
+  assert wform_submitted.get_element_attribute_value(wform_submitted.H_FORM_SUBMITTED,'textContent') == h1_success_text
+  # And the page shows the message “Received!”
+  assert wform_submitted.get_element_attribute_value(wform_submitted.MESSAGE_CORRECT,'textContent') == correct_text
 
-  # Given el usuario está en la página del formulario.
-  web_form_under_test.load()
 
-  # ACT
-  # When el usuario intenta editar el campo de entrada de solo lectura.
-  # Then el campo debe tener la propiedad readonly en su locator.
-  assert web_form_under_test.readonly_text_field_value()
 
-def test_dropdown_select(browser):
-  raise Exception("Incomplete Test")
 
-def test_dropdown_datalist(browser):
-  raise Exception("Incomplete Test")
 
-def test_file_input(browser):
-  raise Exception("Incomplete Test")
-
-def test_checkboxes(browser):
-  raise Exception("Incomplete Test")
-
-def test_color_picker(browser):
-  raise Exception("Incomplete Test")
-
-def test_date_picker_format(browser):
-  raise Exception("Incomplete Test")
-
-def test_past_date(browser):
-  raise Exception("Incomplete Test")
-
-def test_manual_date_picker_date(browser):
-  raise Exception("Incomplete Test")
-
-def test_future_date(browser):
-  raise Exception("Incomplete Test")
-
-def test_floating_elements(browser):
-  raise Exception("Incomplete Test")
-
-def test_submit_button(browser):
-  raise Exception("Incomplete Test")
